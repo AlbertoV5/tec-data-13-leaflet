@@ -22,24 +22,46 @@ function createBaseMaps(){
 }
 let coords = [39.5, -98.5];
 let baseMaps = createBaseMaps();
+let earthquakes = new L.layerGroup();
+let overlays = {
+    Earthquakes: earthquakes
+};
 let map = L.map('mapid', {
     center: coords,
     zoom: 3,
     layers: [baseMaps.Streets]
 });
-L.control.layers(baseMaps).addTo(map);
+L.control.layers(baseMaps, overlays).addTo(map);
 // JSON
 function getRadius(magnitude) {
     if (magnitude === 0) {
       return 1;
     }
     return magnitude * 4;
-  }
+}
+function getColor(magnitude){
+    if (magnitude > 5) {
+        return "#ea2c2c";
+    }
+    else if (magnitude > 4) {
+        return "#ea822c";
+    }
+    else if (magnitude > 3) {
+        return "#ee9c00";
+    }
+    else if (magnitude > 2) {
+        return "#eecc00";
+    }
+    else if (magnitude > 1) {
+        return "#d4ee00";
+    }
+        return "#98ee00";
+}
 function styleInfo(feature) {
     return {
       opacity: 1,
       fillOpacity: 1,
-      fillColor: "#ffae42",
+      fillColor: getColor(feature.properties.mag),
       color: "#000000",
       radius: getRadius(feature.properties.mag),
       stroke: true,
@@ -60,5 +82,6 @@ d3.json(url).then((data) => {
                 <b>Location:</b> ${feature.properties.place}`
             )
         }
-    }).addTo(map);
+    }).addTo(earthquakes);
+    earthquakes.addTo(map);
 })
