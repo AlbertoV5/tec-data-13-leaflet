@@ -32,13 +32,13 @@ function addLine(map){
         [47.4502, -122.3088]
       ];
     return L.polyline(line, {
-        color: "yellow"
+        color: "black"
       }).addTo(map);
 }
 
 let coords = [37.6213, -122.3790]
-let map = createMap('mapid', coords, 5);
-addTile(map, "mapbox/satellite-streets-v11");
+let map = createMap('mapid', coords, 7);
+addTile(map, "mapbox/navigation-night-v1");
 addLine(map);
 // addMarker(map, coords);
 // addCircle(map, coords);
@@ -51,4 +51,22 @@ cities.forEach((city) => {
     })
     .bindPopup("<h2>" + city.city + ", " + city.state + "</h2> <hr> <h3>Population " + city.population.toLocaleString() + "</h3>")
     .addTo(map);
+})
+d3.json("./static/js/sanfranair.geojson").then((data) => {
+    L.geoJSON(data, {
+        // pointToLayer: function(feature, latlng) {
+        //     return L.marker(latlng)
+        //     .bindPopup(
+        //         `<h2> ${feature.properties.city}</h2>
+        //         <hr>
+        //         <b>${feature.properties.name}, ${feature.properties.country}</b>`
+        //     );
+        // },
+        onEachFeature: function(feature, layer) {
+            layer.bindPopup(
+                `<h2> ${feature.properties.city}</h2>
+                <hr>
+                <b>${feature.properties.name}, ${feature.properties.country}</b>`);
+        }
+    }).addTo(map);
 })
