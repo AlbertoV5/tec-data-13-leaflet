@@ -61,3 +61,4 @@ d3.json(url).then((data) => {
     }).addTo(earthquakes);
     earthquakes.addTo(map);
 })
+//https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json
