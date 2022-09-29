@@ -15,7 +15,7 @@ function addMarker(map, coords){
     return L.marker(coords).addTo(map);
 }
 function addCircle(map, coords){
-    // circleMarker adapts to zoom, marker doesn't
+    // circleMarker adapts to zoom, circle doesn't
     return L.circleMarker(coords, {
         radius: 20,
         opacity: 0.8,
