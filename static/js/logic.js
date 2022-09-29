@@ -24,8 +24,11 @@ function addCircle(map, coords){
         fillColor: "yellow"
     }).addTo(map);
 }
-let coords = [34.0522, -118.2437]
-let map = createMap('mapid', coords, 10);
+let coords = [37.0902, -95.7129]
+let map = createMap('mapid', coords, 4);
 addTile(map, "mapbox/dark-v10");
 addMarker(map, coords);
 addCircle(map, coords);
+cities.forEach((city) => {
+    L.marker(city.location).addTo(map);
+})
