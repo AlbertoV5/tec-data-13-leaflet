@@ -27,8 +27,15 @@ function addCircle(map, coords){
 let coords = [37.0902, -95.7129]
 let map = createMap('mapid', coords, 4);
 addTile(map, "mapbox/dark-v10");
-addMarker(map, coords);
-addCircle(map, coords);
+// addMarker(map, coords);
+// addCircle(map, coords);
 cities.forEach((city) => {
-    L.marker(city.location).addTo(map);
+    L.circleMarker(city.location, {
+        radius: city.population/100000,
+        opacity: 0.8,
+        color: "orange",
+        fillColor: "orange"
+    })
+    .bindPopup("<h2>" + city.city + ", " + city.state + "</h2> <hr> <h3>Population " + city.population.toLocaleString() + "</h3>")
+    .addTo(map);
 })
