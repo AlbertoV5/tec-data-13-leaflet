@@ -4,7 +4,7 @@ function createBaseMaps(){
         tileSize: 512,
         maxZoom: 18,
         zoomOffset: -1,
-        id: "mapbox/satellite-v9",
+        id: "mapbox/streets-v11",
         accessToken: API_KEY
     });
     var satellites = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
@@ -12,7 +12,7 @@ function createBaseMaps(){
         tileSize: 512,
         maxZoom: 18,
         zoomOffset: -1,
-        id: "mapbox/streets-v11",
+        id: "mapbox/satellite-v9",
         accessToken: API_KEY
     });
     return {
@@ -29,13 +29,29 @@ let map = L.map('mapid', {
 });
 L.control.layers(baseMaps).addTo(map);
 // JSON
-let style = {
-    weight: 1,
-    color: "blue",
-    fillColor: "yellow",
-    fillOpacity: 0.2
+function getRadius(magnitude) {
+    if (magnitude === 0) {
+      return 1;
+    }
+    return magnitude * 4;
+  }
+function styleInfo(feature) {
+    return {
+      opacity: 1,
+      fillOpacity: 1,
+      fillColor: "#ffae42",
+      color: "#000000",
+      radius: getRadius(feature.properties.mag),
+      stroke: true,
+      weight: 0.5
+    };
 }
 const url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 d3.json(url).then((data) => {
-    L.geoJSON(data).addTo(map);
+    L.geoJSON(data, {
+        pointToLayer: function(feature, latlng) {
+            return L.circleMarker(latlng);
+        },
+        style: styleInfo,
+    }).addTo(map);
 })
