@@ -24,9 +24,22 @@ function addCircle(map, coords){
         fillColor: "yellow"
     }).addTo(map);
 }
-let coords = [37.0902, -95.7129]
-let map = createMap('mapid', coords, 4);
-addTile(map, "mapbox/dark-v10");
+function addLine(map){
+    let line = [
+        [33.9416, -118.4085],
+        [37.6213, -122.3790],
+        [40.7899, -111.9791],
+        [47.4502, -122.3088]
+      ];
+    return L.polyline(line, {
+        color: "yellow"
+      }).addTo(map);
+}
+
+let coords = [37.6213, -122.3790]
+let map = createMap('mapid', coords, 5);
+addTile(map, "mapbox/satellite-streets-v11");
+addLine(map);
 // addMarker(map, coords);
 // addCircle(map, coords);
 cities.forEach((city) => {
