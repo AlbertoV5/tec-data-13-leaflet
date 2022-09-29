@@ -36,17 +36,37 @@ function addLine(map){
       }).addTo(map);
 }
 
-let coords = [30, 30]
-let map = createMap('mapid', coords, 2);
-
-addTile(map, "mapbox/streets-v11");
-d3.json("./static/js/majorAirports.json").then((data) => {
+let coords = [37.6213, -122.3790]
+let map = createMap('mapid', coords, 7);
+addTile(map, "mapbox/navigation-night-v1");
+addLine(map);
+// addMarker(map, coords);
+// addCircle(map, coords);
+cities.forEach((city) => {
+    L.circleMarker(city.location, {
+        radius: city.population/100000,
+        opacity: 0.8,
+        color: "orange",
+        fillColor: "orange"
+    })
+    .bindPopup("<h2>" + city.city + ", " + city.state + "</h2> <hr> <h3>Population " + city.population.toLocaleString() + "</h3>")
+    .addTo(map);
+})
+d3.json("./static/js/sanfranair.geojson").then((data) => {
     L.geoJSON(data, {
+        // pointToLayer: function(feature, latlng) {
+        //     return L.marker(latlng)
+        //     .bindPopup(
+        //         `<h2> ${feature.properties.city}</h2>
+        //         <hr>
+        //         <b>${feature.properties.name}, ${feature.properties.country}</b>`
+        //     );
+        // },
         onEachFeature: function(feature, layer) {
             layer.bindPopup(
-                `<h2>Code: ${feature.properties.faa}</h2>
+                `<h2> ${feature.properties.city}</h2>
                 <hr>
-                <b>Name: ${feature.properties.name}</b>`);
+                <b>${feature.properties.name}, ${feature.properties.country}</b>`);
         }
     }).addTo(map);
 })
