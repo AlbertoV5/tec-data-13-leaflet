@@ -255,3 +255,5 @@ resources/secrets
 !public/build
 !docs/build
 ./config/
+node_modules/
+**/config.js
