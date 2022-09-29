@@ -4,7 +4,7 @@ function createBaseMaps(){
         tileSize: 512,
         maxZoom: 18,
         zoomOffset: -1,
-        id: "mapbox/streets-v11",
+        id: "mapbox/navigation-day-v1",
         accessToken: API_KEY
     });
     var dark = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
@@ -12,7 +12,7 @@ function createBaseMaps(){
         tileSize: 512,
         maxZoom: 18,
         zoomOffset: -1,
-        id: "mapbox/dark-v10",
+        id: "mapbox/navigation-night-v1",
         accessToken: API_KEY
     });
     return {
@@ -20,22 +20,28 @@ function createBaseMaps(){
         Dark: dark
     };
 }
-let coords = [30, 30];
+let coords = [44.0, -80.0]
 let baseMaps = createBaseMaps();
 let map = L.map('mapid', {
-    center: [40.7, -94.5],
+    center: coords,
     zoom: 4,
-    layers: [baseMaps.Light]
+    layers: [baseMaps.Dark]
 });
 L.control.layers(baseMaps).addTo(map);
 // JSON
-d3.json("./static/js/majorAirports.json").then((data) => {
+d3.json("./static/js/torontoRoutes.json").then((data) => {
+    let myStyle = {
+        color: "#ffffa1",
+        weight: 2
+    }
     L.geoJSON(data, {
+        style: myStyle,
         onEachFeature: function(feature, layer) {
             layer.bindPopup(
-                `<h2>Code: ${feature.properties.faa}</h2>
+                `<h2>Airline: ${feature.properties.airline}</h2>
                 <hr>
-                <b>Name: ${feature.properties.name}</b>`);
+                <b>Source: ${feature.properties.src}</b>.
+                <b>Destination: ${feature.properties.dst}</b>`);
         }
     }).addTo(map);
 })
