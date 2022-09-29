@@ -53,5 +53,12 @@ d3.json(url).then((data) => {
             return L.circleMarker(latlng);
         },
         style: styleInfo,
+        onEachFeature: (feature, layer) => {
+            layer.bindPopup(
+                `<h3>Magnitude: ${feature.properties.mag}</h3>
+                <hr>
+                <b>Location:</b> ${feature.properties.place}`
+            )
+        }
     }).addTo(map);
 })
