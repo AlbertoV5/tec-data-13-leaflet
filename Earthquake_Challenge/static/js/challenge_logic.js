@@ -12,6 +12,12 @@ let satelliteStreets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/sate
 	accessToken: API_KEY
 });
 
+let dark = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+	maxZoom: 18,
+	accessToken: API_KEY
+});
+
 // Create the map object with center, zoom level and default layer.
 let map = L.map('mapid', {
 	center: [40.7, -94.5],
@@ -22,7 +28,8 @@ let map = L.map('mapid', {
 // Create a base layer that holds all three maps.
 let baseMaps = {
   "Streets": streets,
-  "Satellite": satelliteStreets
+  "Satellite": satelliteStreets,
+  "Dark": dark
 };
 
 // 1. Add a 2nd layer group for the tectonic plate data.
@@ -43,7 +50,7 @@ L.control.layers(baseMaps, overlays).addTo(map);
 // This function returns the style data for each of the earthquakes we plot on
 // the map. We pass the magnitude of the earthquake into two separate functions
 // to calculate the color and radius.
-let style1 = {
+let styleTecPlates = {
   color: "orange",
   opacity: 0.8,
   weight: 2
@@ -138,7 +145,7 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
   let urlnew = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json"
   d3.json(urlnew).then((data) => {
     L.geoJSON(data, {
-      style: style1,
+      style: styleTecPlates,
     }).addTo(tectonicPlates);
     tectonicPlates.addTo(map);
   });
@@ -163,6 +170,8 @@ d3.json(majorEqUrl).then(function(data) {
   // 5. Change the color function to use three colors for the major earthquakes based on the magnitude of the earthquake.
   // getColorMajor
   function getColor(magnitude) {
+    // Magnitude greater than 6 will be white (as in white-hot).
+    // The other will remain one-to-one to the previous getColor function.
     if (magnitude > 6) {
       return "#ffffff";
     }
@@ -195,4 +204,4 @@ d3.json(majorEqUrl).then(function(data) {
   // 8. Add the major earthquakes layer to the map.
   majorEQ.addTo(map);
   // 9. Close the braces and parentheses for the major earthquake data.
-  });
+});
